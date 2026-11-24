@@ -43,7 +43,7 @@ const Puzzle = () => {
       >
         Shuffle
       </button>
-      {isSolved && <p>Congrats, you solved the puzzle</p>}
+      {isSolved && <p>Congrats, you solved the puzzle!</p>}
     </div>
   );
 };
