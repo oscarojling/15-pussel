@@ -45,21 +45,33 @@ const Puzzle = () => {
   const handleClick = (index: number) => {
     const emptyIndex = bricks.indexOf(0);
 
-    if (!isNext(index, emptyIndex)) return;
+    const sameRow = getRow(index) === getRow(emptyIndex);
+    const sameCol = getCol(index) === getCol(emptyIndex);
+
+    if (index === emptyIndex || (!sameRow && !sameCol)) return;
+
+    const direction = index < emptyIndex ? -1 : 1;
+    const step = sameRow ? direction : direction * COLS;
 
     const newBricks = [...bricks];
-    [newBricks[index], newBricks[emptyIndex]] = [
-      newBricks[emptyIndex],
-      newBricks[index],
-    ];
+    let current = emptyIndex;
+
+    while (current !== index) {
+      const next = current + step;
+      [newBricks[current], newBricks[next]] = [
+        newBricks[next],
+        newBricks[current],
+      ];
+      current = next;
+    }
     setBricks(newBricks);
   };
 
   const isSolved = bricks.join() === createPuzzle().join();
 
   const handleShuffle = () => {
-    setBricks(shufflePuzzle())
-  }
+    setBricks(shufflePuzzle());
+  };
 
   return (
     <div className="max-w-md mx-auto flex flex-col gap-4">
