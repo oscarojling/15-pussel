@@ -1,70 +1,12 @@
 import { useState } from "react";
-
-const ROWS = 3;
-const COLS = 5;
-const TOTAL = ROWS * COLS;
-
-const createPuzzle = () => {
-  const numbers = Array.from({ length: TOTAL - 1 }, (_, i) => i + 1);
-  numbers.push(0);
-  return numbers;
-};
-
-const getRow = (index: number) => Math.floor(index / COLS);
-const getCol = (index: number) => index % COLS;
-
-const isNext = (a: number, b: number) => {
-  const rowSteps = Math.abs(getRow(a) - getRow(b));
-  const colSteps = Math.abs(getCol(a) - getCol(b));
-  return rowSteps + colSteps === 1;
-};
-
-const shufflePuzzle = () => {
-  const numbers = createPuzzle();
-
-  for (let i = 0; i < 200; i++) {
-    const emptyIndex = numbers.indexOf(0);
-
-    const neighbours = numbers
-      .map((_, index) => index)
-      .filter((index) => isNext(index, emptyIndex));
-
-    const randomIndex =
-      neighbours[Math.floor(Math.random() * neighbours.length)];
-    [numbers[randomIndex], numbers[emptyIndex]] = [
-      numbers[emptyIndex],
-      numbers[randomIndex],
-    ];
-  }
-  return numbers;
-};
+import { COLS, EMPTY } from "../../config";
+import { createPuzzle, shufflePuzzle, moveBricks } from "../../utils/puzzle";
 
 const Puzzle = () => {
   const [bricks, setBricks] = useState<number[]>(shufflePuzzle);
 
   const handleClick = (index: number) => {
-    const emptyIndex = bricks.indexOf(0);
-
-    const sameRow = getRow(index) === getRow(emptyIndex);
-    const sameCol = getCol(index) === getCol(emptyIndex);
-
-    if (index === emptyIndex || (!sameRow && !sameCol)) return;
-
-    const direction = index < emptyIndex ? -1 : 1;
-    const step = sameRow ? direction : direction * COLS;
-
-    const newBricks = [...bricks];
-    let current = emptyIndex;
-
-    while (current !== index) {
-      const next = current + step;
-      [newBricks[current], newBricks[next]] = [
-        newBricks[next],
-        newBricks[current],
-      ];
-      current = next;
-    }
-    setBricks(newBricks);
+    setBricks(moveBricks(bricks, index));
   };
 
   const isSolved = bricks.join() === createPuzzle().join();
@@ -74,22 +16,33 @@ const Puzzle = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto flex flex-col gap-4">
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-4">
+      <p>Click on a brick in the same row or column as the empty space.</p>
       <div
-        className="grid gap-2"
+        className="grid gap-2 w-full max-w-md"
         style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }}
       >
-        {bricks.map((brick, index) => (
-          <button
-            key={brick}
-            onClick={() => handleClick(index)}
-            className="bg-gray-200 rounded-2xl"
-          >
-            {brick === 0 ? null : brick}
-          </button>
-        ))}
+        {bricks.map((brick, index) =>
+          brick === 0 ? (
+            <div key={brick} />
+          ) : (
+            <button
+              key={brick}
+              onClick={() => handleClick(index)}
+              disabled={isSolved}
+              className="aspect-square bg-gray-200 rounded-2xl text-2xl cursor-pointer hover:bg-gray-300"
+            >
+              {brick === EMPTY ? null : brick}
+            </button>
+          ),
+        )}
       </div>
-      <button onClick={handleShuffle}>Shuffle</button>
+      <button
+        onClick={handleShuffle}
+        className="cursor-pointer rounded-full bg-gray-800 text-white px-6 py-2 hover:bg-gray-700"
+      >
+        Shuffle
+      </button>
       {isSolved && <p>Congrats, you solved the puzzle</p>}
     </div>
   );
