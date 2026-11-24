@@ -14,7 +14,13 @@ const Puzzle = () => {
   const [bricks, setBricks] = useState<number[]>(createPuzzle);
   console.log(bricks);
 
-  return <></>;
+  return (
+    <div className="grid gap-2 max-w-md mx-auto" style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))`}}>
+      {bricks.map((brick) => (
+        <button key={brick} className="bg-gray-200 rounded-2xl">{brick === 0 ? null : brick}</button>
+      ))}
+    </div>
+  );
 };
 
 export default Puzzle;
