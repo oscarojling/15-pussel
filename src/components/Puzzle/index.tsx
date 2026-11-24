@@ -22,7 +22,7 @@ const Puzzle = () => {
         <h1 className="text-3xl sm:text-4xl font-bold">15-puzzle</h1>
         <p className="text-gray-600">Code test for Grebban</p>
       </header>
-      <p className="text-center text-sm sm:text-base">
+      <p className="text-center text-balance text-sm sm:text-base">
         Click on a brick in the same row or column as the empty space.
       </p>
       <div
