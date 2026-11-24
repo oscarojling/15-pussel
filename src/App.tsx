@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import "./index.css"
+import Puzzle from './components/Puzzle'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <div className='bg-amber-300'>Hello</div>
+    <Puzzle />
     </>
   )
 }
