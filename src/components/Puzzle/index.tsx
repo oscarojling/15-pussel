@@ -17,16 +17,16 @@ const Puzzle = () => {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center gap-6 p-4 bg-white text-black">
+    <main className="min-h-dvh flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 bg-white text-black">
       <header className="text-center">
         <h1 className="text-3xl sm:text-4xl font-bold">15-puzzle</h1>
         <p className="text-gray-600">Code test for Grebban</p>
       </header>
-      <p className="text-center">
+      <p className="text-center text-sm sm:text-base">
         Click on a brick in the same row or column as the empty space.
       </p>
       <div
-        className="grid gap-1.5 sm:gap-2 w-full max-w-md md:max-w-xl"
+        className="grid gap-1.5 sm:gap-2 w-full max-w-md md:max-w-lg"
         style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }}
       >
         {bricks.map((brick, index) =>
