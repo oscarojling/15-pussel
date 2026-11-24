@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "motion/react";
 import { COLS, EMPTY } from "../../config";
 import { createPuzzle, shufflePuzzle, moveBricks } from "../../utils/puzzle";
 
@@ -23,17 +24,18 @@ const Puzzle = () => {
         style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }}
       >
         {bricks.map((brick, index) =>
-          brick === 0 ? (
-            <div key={brick} />
+          brick === EMPTY ? (
+            <motion.div layout key={brick} />
           ) : (
-            <button
+            <motion.button
+              layout
               key={brick}
               onClick={() => handleClick(index)}
               disabled={isSolved}
               className="aspect-square bg-gray-200 rounded-2xl text-2xl cursor-pointer hover:bg-gray-300"
             >
               {brick === EMPTY ? null : brick}
-            </button>
+            </motion.button>
           ),
         )}
       </div>
