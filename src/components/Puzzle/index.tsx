@@ -17,10 +17,16 @@ const Puzzle = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-4">
-      <p>Click on a brick in the same row or column as the empty space.</p>
+    <main className="min-h-screen flex flex-col items-center justify-center gap-6 p-4 bg-white text-black">
+      <header className="text-center">
+        <h1 className="text-3xl sm:text-4xl font-bold">15-puzzle</h1>
+        <p className="text-gray-600">Code test for Grebban</p>
+      </header>
+      <p className="text-center">
+        Click on a brick in the same row or column as the empty space.
+      </p>
       <div
-        className="grid gap-2 w-full max-w-md"
+        className="grid gap-1.5 sm:gap-2 w-full max-w-md md:max-w-xl"
         style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }}
       >
         {bricks.map((brick, index) =>
@@ -32,21 +38,25 @@ const Puzzle = () => {
               key={brick}
               onClick={() => handleClick(index)}
               disabled={isSolved}
-              className="aspect-square bg-gray-200 rounded-2xl text-2xl cursor-pointer hover:bg-gray-300"
+              className="aspect-square bg-black text-white rounded-md text-lg sm:text-2xl font-semibold cursor-pointer sm:hover:bg-gray-800"
             >
-              {brick === EMPTY ? null : brick}
+              {brick}
             </motion.button>
           ),
         )}
       </div>
       <button
         onClick={handleShuffle}
-        className="cursor-pointer rounded-full bg-gray-800 text-white px-6 py-2 hover:bg-gray-700"
+        className="cursor-pointer rounded-full border border-black px-6 py-2 font-semibold hover:bg-black hover:text-white"
       >
         Shuffle
       </button>
-      {isSolved && <p>Congrats, you solved the puzzle!</p>}
-    </div>
+      {isSolved && (
+        <p className="text-xl font-semibold">
+          Congrats, you solved the puzzle!
+        </p>
+      )}
+    </main>
   );
 };
 
