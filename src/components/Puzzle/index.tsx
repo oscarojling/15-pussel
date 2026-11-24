@@ -13,21 +13,39 @@ const createPuzzle = () => {
 const getRow = (index: number) => Math.floor(index / COLS);
 const getCol = (index: number) => index % COLS;
 
+const isNext = (a: number, b: number) => {
+  const rowSteps = Math.abs(getRow(a) - getRow(b));
+  const colSteps = Math.abs(getCol(a) - getCol(b));
+  return rowSteps + colSteps === 1;
+};
+
+const shufflePuzzle = () => {
+  const numbers = createPuzzle();
+
+  for (let i = 0; i < 200; i++) {
+    const emptyIndex = numbers.indexOf(0);
+
+    const neighbours = numbers
+      .map((_, index) => index)
+      .filter((index) => isNext(index, emptyIndex));
+
+    const randomIndex =
+      neighbours[Math.floor(Math.random() * neighbours.length)];
+    [numbers[randomIndex], numbers[emptyIndex]] = [
+      numbers[emptyIndex],
+      numbers[randomIndex],
+    ];
+  }
+  return numbers;
+};
+
 const Puzzle = () => {
-  const [bricks, setBricks] = useState<number[]>(createPuzzle);
+  const [bricks, setBricks] = useState<number[]>(shufflePuzzle);
 
   const handleClick = (index: number) => {
     const emptyIndex = bricks.indexOf(0);
-    const row = getRow(index);
-    const col = getCol(index);
-    const emptyRow = getRow(emptyIndex);
-    const emptyCol = getCol(emptyIndex);
 
-    const isNext =
-      (row === emptyRow && (col === emptyCol - 1 || col === emptyCol + 1)) ||
-      (col === emptyCol && (row === emptyRow - 1 || row === emptyRow + 1));
-
-    if (!isNext) return;
+    if (!isNext(index, emptyIndex)) return;
 
     const newBricks = [...bricks];
     [newBricks[index], newBricks[emptyIndex]] = [
@@ -37,20 +55,30 @@ const Puzzle = () => {
     setBricks(newBricks);
   };
 
+  const isSolved = bricks.join() === createPuzzle().join();
+
+  const handleShuffle = () => {
+    setBricks(shufflePuzzle())
+  }
+
   return (
-    <div
-      className="grid gap-2 max-w-md mx-auto"
-      style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }}
-    >
-      {bricks.map((brick, index) => (
-        <button
-          key={brick}
-          onClick={() => handleClick(index)}
-          className="bg-gray-200 rounded-2xl"
-        >
-          {brick === 0 ? null : brick}
-        </button>
-      ))}
+    <div className="max-w-md mx-auto flex flex-col gap-4">
+      <div
+        className="grid gap-2"
+        style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))` }}
+      >
+        {bricks.map((brick, index) => (
+          <button
+            key={brick}
+            onClick={() => handleClick(index)}
+            className="bg-gray-200 rounded-2xl"
+          >
+            {brick === 0 ? null : brick}
+          </button>
+        ))}
+      </div>
+      <button onClick={handleShuffle}>Shuffle</button>
+      {isSolved && <p>Congrats, you solved the puzzle</p>}
     </div>
   );
 };
